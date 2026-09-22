@@ -47,7 +47,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<DepartmentResponse>> getDepartmentById(@PathVariable UUID id){
+    public ResponseEntity<ApiResponse<DepartmentResponse>> getDepartmentById(@PathVariable String id){
         ApiResponse<DepartmentResponse> response = ApiResponse.<DepartmentResponse>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("Success")
@@ -58,7 +58,7 @@ public class DepartmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<DepartmentResponse>> updateDepartmentById(@PathVariable UUID id,@RequestBody DepartmentRequest departmentRequest){
+    public ResponseEntity<ApiResponse<DepartmentResponse>> updateDepartmentById(@PathVariable String id,@RequestBody DepartmentRequest departmentRequest){
         ApiResponse<DepartmentResponse> response = ApiResponse.<DepartmentResponse>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("Success")
@@ -69,8 +69,8 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteDepartment(@PathVariable("id") UUID id) {
-        ApiResponse<DepartmentResponse> response = ApiResponse.<DepartmentResponse>builder()
+    public ResponseEntity<ApiResponse<Boolean>> deleteDepartment(@PathVariable("id") String id) {
+        ApiResponse<Boolean> response = ApiResponse.<Boolean>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("Success")
                 .multiple(false)
@@ -80,7 +80,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/{id}/employee")
-    public ResponseEntity<ApiResponse<List<EmployeeResponse>>> getDepartmentEmployee(@PathVariable UUID id){
+    public ResponseEntity<ApiResponse<List<EmployeeResponse>>> getDepartmentEmployee(@PathVariable String id){
         ApiResponse<List<EmployeeResponse>> response = ApiResponse.<List<EmployeeResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("Success")

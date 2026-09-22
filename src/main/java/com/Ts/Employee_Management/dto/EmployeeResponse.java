@@ -13,13 +13,13 @@ import java.util.UUID;
 @AllArgsConstructor
 public class EmployeeResponse {
 
-    private UUID empId;
+    private String empId;
     private String firstName;
     private String lastName;
     private String email;
-    private BigDecimal salary;
-    private LocalDate joiningDate;
+    private String salary;
+    private String joiningDate;
     private Boolean isActive;
-    private UUID departmentId;
+    private String  departmentId;
     private String departmentName;
 }

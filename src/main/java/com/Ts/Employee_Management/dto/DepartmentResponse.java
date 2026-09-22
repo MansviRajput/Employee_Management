@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class DepartmentResponse {
 
-    private UUID depId;
+    private String depId;
 
     private String depName;
 

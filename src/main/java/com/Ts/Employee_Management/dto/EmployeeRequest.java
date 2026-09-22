@@ -35,5 +35,5 @@ public class EmployeeRequest {
     private Boolean isActive = true;
 
     @NotNull(message = "Department is required")
-    private UUID departmentId;
+    private String departmentId;
 }

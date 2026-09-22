@@ -14,21 +14,14 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Department {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "department_id",nullable = false,unique = true)
-    private UUID depId;
+public class Department extends AbstractPersistable {
 
-    @Column(name = "department_name",nullable = false,unique = true)
+    @Column(name = "department_name", nullable = false, unique = true)
     private String depName;
 
     @Column(name = "description")
     private String description;
-
-    @Column(name = "active")
-    private Boolean isActive =  true;
 
     @OneToMany(mappedBy = "department")
     private List<Employee> employees = new ArrayList<>();

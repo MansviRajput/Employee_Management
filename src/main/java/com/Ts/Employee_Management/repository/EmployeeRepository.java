@@ -8,9 +8,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
+public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
     boolean existsByEmail(String email);
 
-    List<Employee> findAllByDepartment_DepId(UUID depId);
+    List<Employee> findAllByDepartment_DepId(String depId);
+
+    List<Employee> searchEmployeeByFirstName(String name);
+
+    List<Employee> searchEmployeeByDepartment_DepName(String department);
 }

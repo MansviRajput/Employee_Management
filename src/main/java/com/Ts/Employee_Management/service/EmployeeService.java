@@ -5,6 +5,7 @@ import com.Ts.Employee_Management.dto.EmployeeResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface EmployeeService {
@@ -13,11 +14,13 @@ public interface EmployeeService {
 
     Page<EmployeeResponse> getAllEmployee(Pageable pageable);
 
-    EmployeeResponse getEmployeeById(UUID empId);
+    EmployeeResponse getEmployeeById(String empId);
 
-    EmployeeResponse updateEmployeeById(UUID empId,EmployeeRequest employeeRequest);
+    EmployeeResponse updateEmployeeById(String empId,EmployeeRequest employeeRequest);
 
-    EmployeeResponse deleteEmployeeById(UUID empId);
+    Boolean deleteEmployeeById(String empId);
 
+    List<EmployeeResponse> searchEmployeeByName(String name);
 
+//    List<EmployeeResponse> searchEmployeeByDepartmentName(String department);
 }

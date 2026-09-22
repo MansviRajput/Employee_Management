@@ -4,6 +4,7 @@ import com.Ts.Employee_Management.dto.ApiResponse;
 import com.Ts.Employee_Management.dto.EmployeeRequest;
 import com.Ts.Employee_Management.dto.EmployeeResponse;
 import com.Ts.Employee_Management.dto.PageResponse;
+import com.Ts.Employee_Management.entity.Employee;
 import com.Ts.Employee_Management.service.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -36,7 +39,8 @@ public class EmployeeController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<EmployeeResponse>>> getAllEmployee(
-            @PageableDefault(size = 20) Pageable pageable) {
+            @PageableDefault(size = 20) Pageable pageable,
+    @RequestParam(required = false) Integer page) {
 
         PageResponse<EmployeeResponse> page = PageResponse.from(employeeService.getAllEmployee(pageable));
 
@@ -50,7 +54,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployeeById(@PathVariable UUID id){
+    public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployeeById(@PathVariable String id){
         ApiResponse<EmployeeResponse> response = ApiResponse.<EmployeeResponse>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("Success")
@@ -60,8 +64,31 @@ public class EmployeeController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<EmployeeResponse>>> searchEmployee(@RequestParam(required = false) String name,
+                                                                              @RequestParam(required = false) String department){
+        List<EmployeeResponse> result;
+        if(StringUtils.hasText(name)){
+            result = employeeService.searchEmployeeByName(name);
+        }else if(StringUtils.hasText(department)){
+            result = employeeService.searchEmployeeByDepartmentName(department);
+        }else{
+            throw new IllegalArgumentException("Provider either name or department");
+        }
+
+        ApiResponse<List<EmployeeResponse>> response = ApiResponse.<List<EmployeeResponse>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("Success")
+                .multiple(false)
+                .data(result)
+                .build();
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<EmployeeResponse>> updateEmployeeById(@PathVariable UUID id,@RequestBody EmployeeRequest employeeRequest){
+    public ResponseEntity<ApiResponse<EmployeeResponse>> updateEmployeeById(@PathVariable String id,@RequestBody EmployeeRequest employeeRequest){
         ApiResponse<EmployeeResponse> response = ApiResponse.<EmployeeResponse>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("Success")
@@ -73,8 +100,8 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteEmployeeById(@PathVariable UUID id){
-        ApiResponse<EmployeeResponse> response = ApiResponse.<EmployeeResponse>builder()
+    public ResponseEntity<ApiResponse<Boolean>> deleteEmployeeById(@PathVariable String id){
+        ApiResponse<Boolean> response = ApiResponse.<Boolean>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("Success")
                 .multiple(false)

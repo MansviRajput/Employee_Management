@@ -10,13 +10,12 @@ public class DepartmentMapper {
         return Department.builder()
                 .depName(request.getDepName())
                 .description(request.getDescription())
-                .isActive(request.getIsActive() != null ? request.getIsActive() : true)
                 .build();
     }
 
     public static DepartmentResponse toResponse(Department department) {
         return DepartmentResponse.builder()
-                .depId(department.getDepId())
+                .depId(department.getId())
                 .depName(department.getDepName())
                 .description(department.getDescription())
                 .isActive(department.getIsActive())
