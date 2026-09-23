@@ -5,10 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedBy;
@@ -29,24 +26,28 @@ import java.time.LocalDateTime;
 public class AbstractPersistable implements Serializable {
 
     @Id
-    @Column(nullable = false)
+    @Column(nullable = false,updatable = false)
     private String id;
 
     @CreatedBy
+    @Column(updatable = false)
     private String createdBy;
 
-    @LastModifiedDate
+    @LastModifiedBy
     private String updatedBy;
 
     @CreationTimestamp
+    @Column(nullable = false,updatable = false)
     private LocalDateTime createdAt;
 
-    @LastModifiedBy
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    private Boolean isActive;
+    @Builder.Default
+    private Boolean isActive = true;
 
-    private Boolean isDeleted;
+    @Builder.Default
+    private Boolean isDeleted = false;
 
 
 }

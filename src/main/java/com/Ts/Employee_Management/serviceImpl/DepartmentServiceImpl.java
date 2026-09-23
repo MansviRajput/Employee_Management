@@ -33,8 +33,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             throw new ConflictException("Department is already in use : " + depName);
         }
         Department department = DepartmentMapper.toEntity(departmentRequest);
-        departmentRepository.save(department);
-        return DepartmentMapper.toResponse(department);
+        return DepartmentMapper.toResponse(departmentRepository.save(department));
     }
 
     @Override
@@ -51,38 +50,41 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public DepartmentResponse updateDepartmentById(String depId,DepartmentRequest departmentRequest) {
+    public DepartmentResponse updateDepartmentById(String depId, DepartmentRequest departmentRequest) {
         Department department = findDepartmentOrThrow(depId);
-        String name = departmentRequest.getDepName().trim();
-        if(departmentRepository.existsByDepNameIgnoreCase(name)){
-            throw new ConflictException("Department is already exists: " + name);
+        String newName = departmentRequest.getDepName().trim();
+
+        boolean nameChanged = !department.getDepName().equalsIgnoreCase(newName);
+        if (nameChanged && departmentRepository.existsByDepNameIgnoreCase(newName)) {
+            throw new ConflictException("Department already exists: " + newName);
         }
-        department.setDepName(departmentRequest.getDepName());
+
+        department.setDepName(newName);
         department.setDescription(departmentRequest.getDescription());
         if (departmentRequest.getIsActive() != null) {
             department.setIsActive(departmentRequest.getIsActive());
         }
-        return DepartmentMapper.toResponse(department);
+
+        return DepartmentMapper.toResponse(departmentRepository.save(department));
     }
 
     @Override
     public Boolean deleteDepartmentById(String depId) {
         departmentRepository.delete(findDepartmentOrThrow(depId));
-        return null;
+        return true;
     }
 
     @Override
     public List<EmployeeResponse> getDepartmentEmployee(String depId) {
-        Department department = findDepartmentOrThrow(depId);
-        return employeeRepository.findAllByDepartment_DepId(depId).stream()
+        findDepartmentOrThrow(depId);
+        return employeeRepository.findAllByDepartment_Id(depId).stream()
                 .map(EmployeeMapper::toResponse)
                 .toList();
     }
 
     @Override
     public Department getDepartmentEntityById(String id) {
-        return departmentRepository.findById(id)
-                .orElseThrow(() -> new ConflictException("DepartmentNot Found") );
+        return findDepartmentOrThrow(id);
     }
 
     private Department findDepartmentOrThrow(String depId){

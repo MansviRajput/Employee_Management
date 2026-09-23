@@ -4,6 +4,7 @@ import com.Ts.Employee_Management.dto.EmployeeRequest;
 import com.Ts.Employee_Management.dto.EmployeeResponse;
 import com.Ts.Employee_Management.entity.Department;
 import com.Ts.Employee_Management.entity.Employee;
+import com.Ts.Employee_Management.enums.EmployeeType;
 import com.Ts.Employee_Management.exception.ConflictException;
 import com.Ts.Employee_Management.exception.ResourceNotFoundException;
 import com.Ts.Employee_Management.mapper.EmployeeMapper;
@@ -29,6 +30,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponse createEmployee(EmployeeRequest employeeRequest) {
+        employeeRequest.validate();
         String email = employeeRequest.getEmail();
         if(employeeRepository.existsByEmail(email)){
             throw new ConflictException("Email is already in use : " + email);
@@ -53,16 +55,27 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponse updateEmployeeById(String empId,EmployeeRequest employeeRequest) {
-
+        employeeRequest.validate();
         Employee employee = findEmployeeOrThrow(empId);
-        String email = employeeRequest.getEmail();
-        if(employeeRepository.existsByEmail(email)){
-            throw new ConflictException("Email is already in use : " + email);
+        boolean emailChanged = !employee.getEmail().equalsIgnoreCase(employeeRequest.getEmail());
+        boolean emailTaken = emailChanged && employeeRepository.existsByEmail(employeeRequest.getEmail());
+        if (emailTaken) {
+            throw new ConflictException("Email is already in use : " + employeeRequest.getEmail());
         }
+
         Department department = departmentService.getDepartmentEntityById(employeeRequest.getDepartmentId());
-        employee.setId(empId);
-        employee.setUpdatedBy(employeeRequest.getFirstName());
-        employee.setUpdatedAt();
+        employee.setFirstName(employeeRequest.getFirstName());
+        employee.setLastName(employeeRequest.getLastName());
+        employee.setEmail(employeeRequest.getEmail());
+        employee.setSalary(employeeRequest.getSalary());
+        employee.setJoiningDate(employeeRequest.getJoiningDate());
+        employee.setDepartment(department);
+        employee.setEmployeeType(EmployeeType.fromValue(employeeRequest.getEmployeeType()));
+        if(employeeRequest.getIsActive() != null){
+            employee.setIsActive(employeeRequest.getIsActive());
+        }
+
+        return EmployeeMapper.toResponse(employeeRepository.save(employee));
     }
 
     @Override
@@ -78,12 +91,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .toList();
     }
 
-//    @Override
-//    public List<EmployeeResponse> searchEmployeeByDepartmentName(String department) {
-//        return employeeRepository.searchEmployeeByDepartment_DepName(department).stream()
-//                .map(EmployeeMapper::toResponse)
-//                .toList();
-//    }
+    @Override
+    public List<EmployeeResponse> searchEmployeeByDepartmentName(String department) {
+        return employeeRepository.searchEmployeeByDepartment_DepName(department).stream()
+                .map(EmployeeMapper::toResponse)
+                .toList();
+    }
 
 
     private Employee findEmployeeOrThrow(String id) {

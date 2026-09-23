@@ -19,6 +19,7 @@ public class EmployeeResponse {
     private String email;
     private String salary;
     private String joiningDate;
+    private String employeeType;
     private Boolean isActive;
     private String  departmentId;
     private String departmentName;

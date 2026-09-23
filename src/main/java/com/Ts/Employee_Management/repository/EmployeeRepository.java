@@ -12,7 +12,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
     boolean existsByEmail(String email);
 
-    List<Employee> findAllByDepartment_DepId(String depId);
+    List<Employee> findAllByDepartment_Id(String depId);
 
     List<Employee> searchEmployeeByFirstName(String name);
 

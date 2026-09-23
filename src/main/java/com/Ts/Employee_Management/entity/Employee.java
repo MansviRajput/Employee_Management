@@ -1,8 +1,11 @@
 package com.Ts.Employee_Management.entity;
 
+import com.Ts.Employee_Management.enums.EmployeeType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,8 +18,11 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql  = "UPDATE employee SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 public class Employee extends AbstractPersistable {
 
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @Column(name = "last_name", nullable = false)
@@ -31,7 +37,8 @@ public class Employee extends AbstractPersistable {
     @Column(name = "joining_date")
     private LocalDate joiningDate;
 
-    private String employeeType;
+    @Column(name = "employee_type")
+    private EmployeeType employeeType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")

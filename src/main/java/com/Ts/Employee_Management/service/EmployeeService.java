@@ -22,5 +22,5 @@ public interface EmployeeService {
 
     List<EmployeeResponse> searchEmployeeByName(String name);
 
-//    List<EmployeeResponse> searchEmployeeByDepartmentName(String department);
+    List<EmployeeResponse> searchEmployeeByDepartmentName(String department);
 }

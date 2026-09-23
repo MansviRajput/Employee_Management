@@ -4,14 +4,16 @@ import com.Ts.Employee_Management.dto.EmployeeRequest;
 import com.Ts.Employee_Management.dto.EmployeeResponse;
 import com.Ts.Employee_Management.entity.Department;
 import com.Ts.Employee_Management.entity.Employee;
+import com.Ts.Employee_Management.enums.EmployeeType;
 import com.Ts.Employee_Management.utils.Helper;
+
+import java.util.Optional;
 
 public class EmployeeMapper {
 
     public static Employee toEntity(EmployeeRequest employeeRequest) {
         return Employee.builder()
                 .id(Helper.generateId())
-                .
                 .isActive(true)
                 .isDeleted(false)
                 .firstName(employeeRequest.getFirstName())
@@ -19,22 +21,16 @@ public class EmployeeMapper {
                 .email(employeeRequest.getEmail())
                 .salary(employeeRequest.getSalary())
                 .joiningDate(employeeRequest.getJoiningDate())
+                .employeeType(EmployeeType.fromValue(employeeRequest.getEmployeeType()))
                 .build();
     }
 
-//    public static void updateEntity(Employee employee,EmployeeRequest employeeRequest,Department department){
-//        employee.setFirstName(employeeRequest.getFirstName());
-//        employee.setLastName(employeeRequest.getLastName());
-//        employee.setEmail(employee.getEmail());
-//        employee.setSalary(employeeRequest.getSalary());
-//        employee.setJoiningDate(employeeRequest.getJoiningDate());
-//        if(employeeRequest.getIsActive() != null){
-//            employee.setIsActive(employeeRequest.getIsActive());
-//        }
-//        employee.setDepartment(department);
-//    }
+
 
     public static EmployeeResponse toResponse(Employee employee) {
+
+        Optional<Department> department = Optional.ofNullable(employee.getDepartment());
+
         return EmployeeResponse.builder()
                 .empId(employee.getId())
                 .firstName(employee.getFirstName())
@@ -43,9 +39,12 @@ public class EmployeeMapper {
                 .salary(Helper.formatBigDecimal(employee.getSalary()))
                 .joiningDate(employee.getJoiningDate() != null ?
                         Helper.formatDate(employee.getJoiningDate()) : null)
+                .employeeType(employee.getEmployeeType() != null
+                        ? employee.getEmployeeType().name()
+                        : null)
                 .isActive(employee.getIsActive())
-                .departmentId(employee.getDepartment().getId())
-                .departmentName(employee.getDepartment().getDepName())
+                .departmentId(department.map(Department::getId).orElse(null))
+                .departmentName(department.map(Department::getDepName).orElse(null))
                 .build();
     }
 }
