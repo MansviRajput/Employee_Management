@@ -21,7 +21,7 @@ public class EmployeeMapper {
                 .email(employeeRequest.getEmail())
                 .salary(employeeRequest.getSalary())
                 .joiningDate(employeeRequest.getJoiningDate())
-                .employeeType(EmployeeType.fromValue(employeeRequest.getEmployeeType()))
+                .employeeType(EmployeeType.fromValue(employeeRequest.getEmployeeType()).getEmployeeType()) //return the code but if you use the name()n then it return the enum
                 .build();
     }
 
@@ -40,7 +40,7 @@ public class EmployeeMapper {
                 .joiningDate(employee.getJoiningDate() != null ?
                         Helper.formatDate(employee.getJoiningDate()) : null)
                 .employeeType(employee.getEmployeeType() != null
-                        ? employee.getEmployeeType().name()
+                        ? EmployeeType.fromValue(employee.getEmployeeType()).getEmployeeType()
                         : null)
                 .isActive(employee.getIsActive())
                 .departmentId(department.map(Department::getId).orElse(null))

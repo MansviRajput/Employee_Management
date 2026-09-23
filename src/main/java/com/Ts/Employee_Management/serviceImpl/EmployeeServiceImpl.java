@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -70,7 +68,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setSalary(employeeRequest.getSalary());
         employee.setJoiningDate(employeeRequest.getJoiningDate());
         employee.setDepartment(department);
-        employee.setEmployeeType(EmployeeType.fromValue(employeeRequest.getEmployeeType()));
+        employee.setEmployeeType(EmployeeType.fromValue(employeeRequest.getEmployeeType()).getEmployeeType());
 
 
         return EmployeeMapper.toResponse(employeeRepository.save(employee));

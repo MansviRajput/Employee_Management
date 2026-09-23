@@ -38,7 +38,7 @@ public class Employee extends AbstractPersistable {
     private LocalDate joiningDate;
 
     @Column(name = "employee_type")
-    private EmployeeType employeeType;
+    private String employeeType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
