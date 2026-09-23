@@ -11,6 +11,7 @@ public class EmployeeMapper {
     public static Employee toEntity(EmployeeRequest employeeRequest) {
         return Employee.builder()
                 .id(Helper.generateId())
+                .
                 .isActive(true)
                 .isDeleted(false)
                 .firstName(employeeRequest.getFirstName())

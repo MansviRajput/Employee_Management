@@ -60,11 +60,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new ConflictException("Email is already in use : " + email);
         }
         Department department = departmentService.getDepartmentEntityById(employeeRequest.getDepartmentId());
-//        EmployeeMapper.updateEntity(employee,employeeRequest,department);
-        employee.setEmail(employeeRequest.getEmail());
-        employee.setIsActive(employeeRequest.getIsActive());
-        
-        return EmployeeMapper::toResponse;
+        employee.setId(empId);
+        employee.setUpdatedBy(employeeRequest.getFirstName());
+        employee.setUpdatedAt();
     }
 
     @Override
