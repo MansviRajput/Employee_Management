@@ -71,9 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setJoiningDate(employeeRequest.getJoiningDate());
         employee.setDepartment(department);
         employee.setEmployeeType(EmployeeType.fromValue(employeeRequest.getEmployeeType()));
-        if(employeeRequest.getIsActive() != null){
-            employee.setIsActive(employeeRequest.getIsActive());
-        }
+
 
         return EmployeeMapper.toResponse(employeeRepository.save(employee));
     }

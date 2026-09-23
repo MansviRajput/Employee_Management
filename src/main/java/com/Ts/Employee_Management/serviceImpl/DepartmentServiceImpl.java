@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
@@ -28,10 +27,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentResponse createDepartment(DepartmentRequest departmentRequest) {
-        String depName = departmentRequest.getDepName();
-        if(departmentRepository.existsByDepNameIgnoreCase(depName)){
-            throw new ConflictException("Department is already in use : " + depName);
+        departmentRequest.validate();
+
+        if (departmentRepository.existsByDepNameIgnoreCase(departmentRequest.getDepName())) {
+            throw new ConflictException("Department is already in use : " + departmentRequest.getDepName());
         }
+
         Department department = DepartmentMapper.toEntity(departmentRequest);
         return DepartmentMapper.toResponse(departmentRepository.save(department));
     }
@@ -51,8 +52,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentResponse updateDepartmentById(String depId, DepartmentRequest departmentRequest) {
+        departmentRequest.validate();
+
         Department department = findDepartmentOrThrow(depId);
-        String newName = departmentRequest.getDepName().trim();
+        String newName = departmentRequest.getDepName();
 
         boolean nameChanged = !department.getDepName().equalsIgnoreCase(newName);
         if (nameChanged && departmentRepository.existsByDepNameIgnoreCase(newName)) {
@@ -87,7 +90,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         return findDepartmentOrThrow(id);
     }
 
-    private Department findDepartmentOrThrow(String depId){
-        return departmentRepository.findById(depId).orElseThrow(()-> new ResourceNotFoundException("Department not found : " + depId));
+    private Department findDepartmentOrThrow(String depId) {
+        return departmentRepository.findById(depId)
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found : " + depId));
     }
 }

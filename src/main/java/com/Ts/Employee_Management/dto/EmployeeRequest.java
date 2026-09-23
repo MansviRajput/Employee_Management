@@ -27,43 +27,34 @@ public class EmployeeRequest {
     private BigDecimal salary;
     private LocalDate joiningDate;
 
-    @Builder.Default
-    private Boolean isActive = true;
-
     private String departmentId;
     private String employeeType;
 
     public void validate() {
-        List<String> errors = new ArrayList<>();
-
         if (!StringUtils.hasText(firstName)) {
-            errors.add("First name is required");
+            throw new ValidationException("First Name is Required");
         }
         if (!StringUtils.hasText(lastName)) {
-            errors.add("Last name is required");
+            throw new ValidationException("Last Name is Required");
         }
         if (!StringUtils.hasText(email)) {
-            errors.add("Email is required");
+            throw new ValidationException("Email is Required");
         } else if (!EMAIL_PATTERN.matcher(email).matches()) {
-            errors.add("Email must be valid");
+            throw new ValidationException("Email is not valid");
         }
         if (salary == null) {
-            errors.add("Salary is required");
+            throw new ValidationException("Salary is Required");
         } else if (salary.compareTo(BigDecimal.ZERO) <= 0) {
-            errors.add("Salary must be positive");
+            throw new ValidationException("Salary should be positive");
         }
         if (joiningDate != null && joiningDate.isAfter(LocalDate.now())) {
-            errors.add("Joining date cannot be in the future");
+            throw new ValidationException("Joining Date is Required");
         }
         if (!StringUtils.hasText(departmentId)) {
-            errors.add("Department is required");
+            throw new ValidationException("Department Id is Required");
         }
         if (!StringUtils.hasText(employeeType)) {
-            errors.add("Employee type is required");
-        }
-
-        if (!errors.isEmpty()) {
-            throw new ValidationException(errors);
+            throw new ValidationException("Employee type is Required");
         }
     }
 }

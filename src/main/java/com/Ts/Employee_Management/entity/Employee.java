@@ -18,7 +18,7 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql  = "UPDATE employee SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE employee SET is_deleted = true, is_active = false WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 public class Employee extends AbstractPersistable {
 

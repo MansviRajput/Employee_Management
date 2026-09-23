@@ -37,9 +37,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Object>> handleValidationException(ValidationException e) {
         ApiResponse<Object> apiResponse = ApiResponse.builder()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .message("Validation failed")
+                .message(e.getMessage())
                 .multiple(true)
-                .data(e.getMessage())
+                .data("Fail")
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }

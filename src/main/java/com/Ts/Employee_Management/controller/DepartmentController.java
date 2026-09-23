@@ -76,7 +76,7 @@ public class DepartmentController {
                 .multiple(false)
                 .data(departmentService.deleteDepartmentById(id))
                 .build();
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{id}/employee")

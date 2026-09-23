@@ -5,7 +5,6 @@ import com.Ts.Employee_Management.dto.EmployeeRequest;
 import com.Ts.Employee_Management.dto.EmployeeResponse;
 import com.Ts.Employee_Management.dto.PageResponse;
 import com.Ts.Employee_Management.service.EmployeeService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +37,7 @@ public class EmployeeController {
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<EmployeeResponse>>> getAllEmployee(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String direction) {
 
